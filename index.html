@@ -5,11 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Search</title>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div>
-        <input type="text" name="search" id="search">
-        <div id="result"></div>
+    <form id="search-bar">
+        <input type="text" name="query" id="query" placeholder="start typing...">
+        <div id="suggestions"></div>
+        <button id="search">&#x1F50D;&#xFE0E; Search</button>    
+    </form>
+    <div id="container">
     </div>
 </body>
 </html>
