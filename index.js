@@ -29,10 +29,6 @@ function displaySuggestions(items){
 async function handleKeyPress(){
     try {
         const query = document.getElementById("query").value;
-        if ( query.length < 3 ){
-            const container = document.getElementById("suggestions").style.display = "none";
-            return;
-        }
         result = await fetchSuggestion(query);
         const {Search} = result;
         const res = [];
@@ -58,7 +54,7 @@ function displayMovie(movieDetails){
     
     poster.src = movieDetails.Poster
     title.textContent = movieDetails.Title + " (" + movieDetails.Year + ")";
-    type.textContent = "type - " + movieDetails.type;
+    type.textContent = "type - " + movieDetails.Type;
     
     info.append( title, type );
     movie.append( poster, info );
@@ -66,12 +62,21 @@ function displayMovie(movieDetails){
 }
 
 
-function handleSearch(event){
+async function handleSearch(event){
     event.preventDefault();
-    document.getElementById("suggestions").style.display = "none";
-    const {Search} = result;
-    document.getElementById("container").innerHTML = ""
-    Search.forEach( el => displayMovie(el) );
+    try {
+        document.getElementById("suggestions").style.display = "none";
+        const query = document.getElementById("query").value;
+        if ( !query ){
+            return;
+        }
+        result = await fetchSuggestion(query);
+        const {Search} = result;
+        document.getElementById("container").innerHTML = ""
+        Search.forEach( el => displayMovie(el) );
+    } catch ( err ) {
+        console.log(err);
+    }
 }
 
 
@@ -79,9 +84,13 @@ function throttler(){
     let time = 0;
     return () => {
         const now = new Date();
+        let id;
         if ( now - time > 300 ){
-            handleKeyPress();
             time = now;
+            id && clearTimeout(id);
+            id = setTimeout( ( ) => {
+                handleKeyPress();
+            }, 250)
         }
     }
 }
